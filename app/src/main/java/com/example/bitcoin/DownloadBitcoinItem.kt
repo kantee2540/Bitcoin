@@ -8,7 +8,7 @@ import java.io.IOException
 
 class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
 
-    val url = "https://api.coinranking.com/v1/public/coins"
+    private val url = "https://api.coinranking.com/v1/public/coins"
 
     companion object{
         const val NAME = "name"
