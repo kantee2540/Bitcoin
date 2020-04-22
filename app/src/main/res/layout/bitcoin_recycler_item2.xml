@@ -7,7 +7,7 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/recycler_name"
+        android:id="@+id/recycler_name2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
@@ -19,7 +19,7 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/recycler_icon"
+        android:id="@+id/recycler_icon2"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_weight="0"
