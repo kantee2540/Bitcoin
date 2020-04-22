@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">BitCoin</string>
+    <string name="app_name">Coins</string>
     <string name="error_mes">Error to download item please try again</string>
 </resources>
