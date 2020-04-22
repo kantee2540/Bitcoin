@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.bitcoin_recycler_item.view.*
 
-class BitcoinRecyclerAdapter(val bitcoinItem: ArrayList<BitcoinModel>, val context: Context): RecyclerView.Adapter<BitcoinRecyclerAdapter.Holder>(){
+class BitcoinRecyclerAdapter(private val bitcoinItem: ArrayList<BitcoinModel>, private val context: Context)
+    : RecyclerView.Adapter<BitcoinRecyclerAdapter.Holder>(){
 
     override fun getItemCount(): Int {
         return bitcoinItem.count()
