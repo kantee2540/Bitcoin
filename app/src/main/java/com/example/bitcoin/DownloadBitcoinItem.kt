@@ -10,8 +10,11 @@ class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
 
     val url = "https://api.coinranking.com/v1/public/coins"
 
-    val NAME = "name"
-    val DESCRIPTION = "description"
+    companion object{
+        const val NAME = "name"
+        const val DESCRIPTION = "description"
+        const val ICONURL = "iconUrl"
+    }
 
     fun downloadItem(){
         val client = OkHttpClient()
@@ -35,6 +38,7 @@ class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
                     val bitcoinModel = BitcoinModel()
                     bitcoinModel.name = json.getString(NAME)
                     bitcoinModel.description = json.getString(DESCRIPTION)
+                    bitcoinModel.iconURL = json.getString(ICONURL)
 
                     bitCoinItem.add(bitcoinModel)
 
