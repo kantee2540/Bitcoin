@@ -45,9 +45,10 @@ class BitcoinRecyclerAdapter(private val bitcoinItem: ArrayList<BitcoinModel>, p
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(position % 5 == 4 && position != 0){
+        return if(position % 5 == 4 && position != 0) {
             1
-        }else{
+        }
+        else{
             super.getItemViewType(position)
         }
 

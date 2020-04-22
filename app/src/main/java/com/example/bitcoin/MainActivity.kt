@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity(), DownloadBitcoinInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val dividerItemDecoration = DividerItemDecoration(bitcoin_recycler.context, DividerItemDecoration.VERTICAL)
+        bitcoin_recycler.addItemDecoration(dividerItemDecoration)
+
         downloadBitcoinItem()
 
         pull_to_refresh.setOnRefreshListener {
@@ -30,11 +33,11 @@ class MainActivity : AppCompatActivity(), DownloadBitcoinInterface {
     override fun downloadItemSuccess(item: ArrayList<BitcoinModel>) {
         runOnUiThread {
             val bitcoinRecyclerAdapter = BitcoinRecyclerAdapter(item, this)
-            val dividerItemDecoration = DividerItemDecoration(bitcoin_recycler.context, DividerItemDecoration.VERTICAL)
+
 
             bitcoin_recycler.adapter = bitcoinRecyclerAdapter
             bitcoin_recycler.layoutManager = LinearLayoutManager(this)
-            bitcoin_recycler.addItemDecoration(dividerItemDecoration)
+
 
             pull_to_refresh.isRefreshing = false
             loading_activity.visibility = View.GONE
