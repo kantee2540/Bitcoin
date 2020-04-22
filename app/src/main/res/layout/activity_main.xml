@@ -7,30 +7,47 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="16dp">
 
         <EditText
             android:id="@+id/search_editText"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/search_background"
             android:drawableStart="@drawable/ic_search_black_24dp"
             android:drawablePadding="15dp"
-            android:ems="10"
 
+            android:ems="10"
             android:hint="@android:string/search_go"
             android:inputType="text"
             android:padding="15dp"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:textSize="14sp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/clear_text_button"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/ic_cancel_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/search_editText"
+            app:layout_constraintEnd_toEndOf="@+id/search_editText"
+            app:layout_constraintTop_toTopOf="@+id/search_editText"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pull_to_refresh"

@@ -15,6 +15,7 @@ class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
         const val DESCRIPTION = "description"
         const val ICONURL = "iconUrl"
         const val SLUG = "slug"
+        const val SYMBOL = "symbol"
     }
 
     fun downloadItem(){
@@ -41,6 +42,7 @@ class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
                     bitcoinModel.description = json.getString(DESCRIPTION)
                     bitcoinModel.iconURL = json.getString(ICONURL)
                     bitcoinModel.slug = json.getString(SLUG)
+                    bitcoinModel.symbols = json.getString(SYMBOL)
 
                     bitCoinItem.add(bitcoinModel)
 

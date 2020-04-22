@@ -5,4 +5,5 @@ class BitcoinModel {
     lateinit var description: String
     lateinit var iconURL: String
     lateinit var slug: String
+    lateinit var symbols: String
 }
