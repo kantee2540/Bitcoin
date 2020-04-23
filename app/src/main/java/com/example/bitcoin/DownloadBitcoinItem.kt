@@ -1,5 +1,6 @@
 package com.example.bitcoin
 
+import android.net.Uri
 import android.util.Log
 import okhttp3.*
 import org.json.JSONArray
@@ -8,7 +9,7 @@ import java.io.IOException
 
 class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
 
-    private val url = "https://api.coinranking.com/v1/public/coins"
+    private val apiUrl = "https://api.coinranking.com/v1/public/coins"
 
     companion object{
         const val NAME = "name"
@@ -18,9 +19,19 @@ class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
         const val SYMBOL = "symbol"
     }
 
-    fun downloadItem(){
+    fun downloadItem(offset: Int){
         val client = OkHttpClient()
-        val request = Request.Builder().url(url).build()
+
+        val url = Uri.parse(apiUrl)
+            .buildUpon()
+            .appendQueryParameter("offset", offset.toString())
+            .appendQueryParameter("limit", "10")
+            .build()
+            .toString()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
