@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLines="3"
-            android:text="Bitcoin is the first decentralized digital currency that can be sent through the internet globally without using financial.."
+            android:ellipsize="end"
+            android:text="Bitcoin is the first decentralized digital currency that can be sent through the internet globally without using financial."
             android:textSize="14sp"/>
     </LinearLayout>
 
