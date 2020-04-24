@@ -4,32 +4,32 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.widget.Adapter
-import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.internal.notify
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     private  var downloadedItem: ArrayList<BitcoinModel> = ArrayList()
-    lateinit var adapter: BitcoinRecyclerAdapter
+    private lateinit var adapter: BitcoinRecyclerAdapter
 
     companion object {
         const val PAGE_START = 1
         const val TOTAL_PAGE = 10
     }
 
+    private var isSearching = false
+    private var firstSearchingType = false
+
     private var isLoading = false
     private var isLastPage = false
     private var currentPage = PAGE_START
-    private var offset = 0
 
+    private var offset = 0
+    private var limit = 10
+    private var keyword = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
 
         pull_to_refresh.setOnRefreshListener {
             offset = 0
+            currentPage = PAGE_START
+            isLastPage = false
             loadFirstPage()
         }
     }
@@ -54,40 +56,36 @@ class MainActivity : AppCompatActivity() {
             search_editText.setText("")
         }
 
-
         search_editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                val filteredItem: ArrayList<BitcoinModel> = ArrayList()
+                loading_activity.visibility = View.VISIBLE
                 if (p0.toString() != "") {
+                    pull_to_refresh.isEnabled = false
+                    isSearching = true
                     clear_text_button.visibility = View.VISIBLE
-                    for (item in downloadedItem) {
-                        when {
-                            item.name.toLowerCase().startsWith(p0.toString().toLowerCase())
-                            -> {
-                                filteredItem.add(item)
-                            }
-                            item.slug.toLowerCase().startsWith(p0.toString().toLowerCase()) -> {
-                                filteredItem.add(item)
-                            }
-                            item.symbols.toLowerCase().startsWith(p0.toString().toLowerCase()) -> {
-                                filteredItem.add(item)
-                            }
-                        }
 
-                        setUpRecyclerView(filteredItem)
-                    }
+                    offset = 0
+                    keyword = p0.toString()
+                    loadSearchItem(keyword)
+
 
                 } else {
+
+                    isSearching = false
+                    firstSearchingType = false
+
+                    offset = 0
+                    loadFirstPage()
+
+                    pull_to_refresh.isEnabled = true
                     clear_text_button.visibility = View.GONE
-                    setUpRecyclerView(downloadedItem)
                 }
             }
         })
@@ -96,11 +94,16 @@ class MainActivity : AppCompatActivity() {
     private fun loadFirstPage() {
         val downloadBitcoin = DownloadBitcoinItem(object : DownloadBitcoinInterface {
             override fun downloadItemSuccess(item: ArrayList<BitcoinModel>) {
+
+                downloadedItem = item
                 runOnUiThread {
-                    downloadedItem = item
-                    setUpRecyclerView(downloadedItem)
+
+                    setUpRecyclerView(item)
                     loading_activity.visibility = View.GONE
                     pull_to_refresh.isRefreshing = false
+
+                    if (currentPage <= TOTAL_PAGE && !isSearching) adapter.addFooter()
+                    else isLastPage = true
                 }
 
             }
@@ -110,27 +113,59 @@ class MainActivity : AppCompatActivity() {
                 loading_activity.visibility = View.GONE
             }
         })
-        downloadBitcoin.downloadItem(offset = offset)
+
+        downloadBitcoin.downloadItem(offset = offset, limit = limit)
+
     }
 
     private fun loadNextPage(){
         offset += 10
         val downloadBitcoin = DownloadBitcoinItem(object : DownloadBitcoinInterface {
             override fun downloadItemSuccess(item: ArrayList<BitcoinModel>) {
+
                 runOnUiThread {
+                    adapter.removeFooter()
                     isLoading = false
                     adapter.addItem(item)
-                    loading_activity.visibility = View.GONE
+                    downloadedItem.addAll(item)
+
+                    if (currentPage != TOTAL_PAGE) adapter.addFooter()
+                    else isLastPage = true
                 }
 
             }
 
             override fun downloadItemFailed(error: String) {
+                adapter.removeFooter()
                 pull_to_refresh.isRefreshing = false
                 loading_activity.visibility = View.GONE
             }
         })
-        downloadBitcoin.downloadItem(offset = offset)
+
+        downloadBitcoin.downloadItem(offset = offset, limit = limit)
+
+    }
+
+    private fun loadSearchItem(keyword: String){
+        val downloadBitcoin = DownloadBitcoinItem(object : DownloadBitcoinInterface{
+            override fun downloadItemSuccess(item: ArrayList<BitcoinModel>) {
+
+                downloadedItem = item
+                runOnUiThread {
+                    setUpRecyclerView(item)
+                    loading_activity.visibility = View.GONE
+
+                    if (currentPage <= TOTAL_PAGE && !isSearching) adapter.addFooter()
+                    else isLastPage = true
+                }
+            }
+
+            override fun downloadItemFailed(error: String) {
+                loading_activity.visibility = View.GONE
+            }
+        })
+
+        downloadBitcoin.searchItem(keyword, offset, limit)
     }
 
     private fun setUpRecyclerView(item: ArrayList<BitcoinModel>) {
@@ -142,10 +177,12 @@ class MainActivity : AppCompatActivity() {
 
         bitcoin_recycler.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
-                loading_activity.visibility = View.VISIBLE
-                isLoading = true
-                currentPage += 1
-                loadNextPage()
+                if(!isSearching) {
+                    isLoading = true
+                    currentPage += 1
+                    loadNextPage()
+                }
+
             }
 
             override fun getTotalPageCount(): Int {
@@ -158,6 +195,10 @@ class MainActivity : AppCompatActivity() {
 
             override fun isLoading(): Boolean {
                 return isLoading
+            }
+
+            override fun isSearching(): Boolean {
+                return isSearching
             }
         })
     }

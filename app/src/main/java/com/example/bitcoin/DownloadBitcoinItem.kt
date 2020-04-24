@@ -19,15 +19,34 @@ class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
         const val SYMBOL = "symbol"
     }
 
-    fun downloadItem(offset: Int){
-        val client = OkHttpClient()
+    fun searchItem(keyword: String, offset: Int, limit: Int){
+        val url = Uri.parse(apiUrl)
+            .buildUpon()
+            .appendQueryParameter("prefix", keyword)
+            .appendQueryParameter("offset", offset.toString())
+            .appendQueryParameter("limit", limit.toString())
+            .build()
+            .toString()
+
+        requestApi(url)
+    }
+
+    fun downloadItem(offset: Int, limit: Int) {
 
         val url = Uri.parse(apiUrl)
             .buildUpon()
             .appendQueryParameter("offset", offset.toString())
-            .appendQueryParameter("limit", "10")
+            .appendQueryParameter("limit", limit.toString())
             .build()
             .toString()
+
+        requestApi(url)
+
+    }
+
+    private fun requestApi(url: String){
+
+        val client = OkHttpClient()
 
         val request = Request.Builder()
             .url(url)
