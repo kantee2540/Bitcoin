@@ -28,6 +28,4 @@ abstract class PaginationScrollListener(private var layoutManager: LinearLayoutM
 
     abstract fun isLoading(): Boolean
 
-    abstract fun isSearching(): Boolean
-
 }

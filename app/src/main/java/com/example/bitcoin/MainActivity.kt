@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity() {
         const val TOTAL_PAGE = 10
     }
 
-    private var isSearching = false
     private var firstSearchingType = false
 
+    private var isSearching = false
     private var isLoading = false
     private var isLastPage = false
     private var currentPage = PAGE_START
@@ -66,19 +66,19 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 loading_activity.visibility = View.VISIBLE
+
+                currentPage = PAGE_START
                 if (p0.toString() != "") {
                     pull_to_refresh.isEnabled = false
-                    isSearching = true
                     clear_text_button.visibility = View.VISIBLE
 
-                    offset = 0
+                    isSearching = true
                     keyword = p0.toString()
                     loadSearchItem(keyword)
 
 
                 } else {
-
-                    isSearching = false
+                    isSearching = true
                     firstSearchingType = false
 
                     offset = 0
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                     loading_activity.visibility = View.GONE
                     pull_to_refresh.isRefreshing = false
 
-                    if (currentPage <= TOTAL_PAGE && !isSearching) adapter.addFooter()
+                    if (currentPage <= TOTAL_PAGE) adapter.addFooter()
                     else isLastPage = true
                 }
 
@@ -155,8 +155,6 @@ class MainActivity : AppCompatActivity() {
                     setUpRecyclerView(item)
                     loading_activity.visibility = View.GONE
 
-                    if (currentPage <= TOTAL_PAGE && isSearching) adapter.addFooter()
-                    else isLastPage = true
                 }
             }
 
@@ -177,11 +175,9 @@ class MainActivity : AppCompatActivity() {
 
         bitcoin_recycler.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
-                if(!isSearching) {
-                    isLoading = true
-                    currentPage += 1
-                    loadNextPage()
-                }
+                isLoading = true
+                currentPage += 1
+                loadNextPage()
 
             }
 
@@ -196,10 +192,7 @@ class MainActivity : AppCompatActivity() {
             override fun isLoading(): Boolean {
                 return isLoading
             }
-
-            override fun isSearching(): Boolean {
-                return isSearching
-            }
         })
+
     }
 }
