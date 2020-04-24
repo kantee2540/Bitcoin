@@ -16,9 +16,7 @@ import kotlinx.android.synthetic.main.processing_item.view.*
 class BitcoinRecyclerAdapter(private var bitcoinItem: ArrayList<BitcoinModel>, private val context: Context)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
-    private var isSearching = false
     private var isLoadingAdded = false
-    private var filteredItem: ArrayList<BitcoinModel> = ArrayList()
 
     companion object{
         const val ITEM = 0
@@ -109,14 +107,6 @@ class BitcoinRecyclerAdapter(private var bitcoinItem: ArrayList<BitcoinModel>, p
         val position = bitcoinItem.size - 1
         bitcoinItem.removeAt(position)
         this.notifyItemRemoved(position)
-    }
-
-    fun searchItem(){
-
-    }
-
-    fun getItem(): ArrayList<BitcoinModel>{
-        return bitcoinItem
     }
 
     class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

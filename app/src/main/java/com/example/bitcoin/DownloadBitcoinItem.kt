@@ -19,12 +19,10 @@ class DownloadBitcoinItem(val callback: DownloadBitcoinInterface) {
         const val SYMBOL = "symbol"
     }
 
-    fun searchItem(keyword: String, offset: Int, limit: Int){
+    fun searchItem(keyword: String){
         val url = Uri.parse(apiUrl)
             .buildUpon()
             .appendQueryParameter("prefix", keyword)
-            .appendQueryParameter("offset", offset.toString())
-            .appendQueryParameter("limit", limit.toString())
             .build()
             .toString()
 

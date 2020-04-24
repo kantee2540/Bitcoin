@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                     setUpRecyclerView(item)
                     loading_activity.visibility = View.GONE
 
-                    if (currentPage <= TOTAL_PAGE && !isSearching) adapter.addFooter()
+                    if (currentPage <= TOTAL_PAGE && isSearching) adapter.addFooter()
                     else isLastPage = true
                 }
             }
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        downloadBitcoin.searchItem(keyword, offset, limit)
+        downloadBitcoin.searchItem(keyword)
     }
 
     private fun setUpRecyclerView(item: ArrayList<BitcoinModel>) {
