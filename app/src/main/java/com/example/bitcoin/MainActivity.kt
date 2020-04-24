@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 loading_activity.visibility = View.VISIBLE
 
-                currentPage = PAGE_START
                 if (p0.toString() != "") {
                     pull_to_refresh.isEnabled = false
                     clear_text_button.visibility = View.VISIBLE
@@ -78,9 +77,10 @@ class MainActivity : AppCompatActivity() {
 
 
                 } else {
-                    isSearching = true
+                    isSearching = false
                     firstSearchingType = false
 
+                    currentPage = PAGE_START
                     offset = 0
                     loadFirstPage()
 
@@ -191,6 +191,10 @@ class MainActivity : AppCompatActivity() {
 
             override fun isLoading(): Boolean {
                 return isLoading
+            }
+
+            override fun isSearching(): Boolean {
+                return isSearching
             }
         })
 
